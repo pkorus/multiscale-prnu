@@ -15,7 +15,7 @@ function features = extractPatchFeatures(patch)
 %
 % -------------------------------------------------------------------------
 % This function is a part of multi-scale analysis toolkit available from:
-% https://github.com/pkorus/multiscale-prnu-localization-toolbox
+% https://github.com/pkorus/multiscale-prnu
 % The code is provided without any warranty or support for educational and 
 % research purposes only. See readme.md for more details.
 % -------------------------------------------------------------------------

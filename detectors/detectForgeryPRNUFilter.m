@@ -26,7 +26,7 @@ function guided_response = detectForgeryPRNUFilter(image, camera_model, bs, adva
 %  - mode            - 'central', 'boxcar', or 'guided'
 % -------------------------------------------------------------------------
 % This function is a part of multi-scale analysis toolkit available from:
-% https://github.com/pkorus/multiscale-prnu-localization-toolbox
+% https://github.com/pkorus/multiscale-prnu
 % The code is provided without any warranty or support for educational and 
 % research purposes only. See readme.md for more details.
 % -------------------------------------------------------------------------

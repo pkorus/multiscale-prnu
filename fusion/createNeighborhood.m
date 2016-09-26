@@ -10,7 +10,7 @@ function [edgeStruct, adj] = createNeighborhood(nRows, nCols, nMode)
 %                       8 - same as 4 + includes diagonal neighbors
 % -------------------------------------------------------------------------
 % This function is a part of multi-scale analysis toolkit available from:
-% https://github.com/pkorus/multiscale-prnu-localization-toolbox
+% https://github.com/pkorus/multiscale-prnu
 % The code is provided without any warranty or support for educational and 
 % research purposes only. See readme.md for more details.
 % -------------------------------------------------------------------------

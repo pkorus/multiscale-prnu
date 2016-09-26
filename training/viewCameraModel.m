@@ -11,7 +11,7 @@ function viewCameraModel(camera_name, show_scales, print_only, plot_prnu)
 %   - plot_prnu         - also include a plot of the estimated PRNU (small fragment)
 % -------------------------------------------------------------------------
 % This function is a part of multi-scale analysis toolkit available from:
-% https://github.com/pkorus/multiscale-prnu-localization-toolbox
+% https://github.com/pkorus/multiscale-prnu
 % The code is provided without any warranty or support for educational and 
 % research purposes only. See readme.md for more details.
 % -------------------------------------------------------------------------

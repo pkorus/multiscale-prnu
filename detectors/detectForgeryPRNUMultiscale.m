@@ -20,7 +20,7 @@ function detection_results = detectForgeryPRNUMultiscale(image, camera_model, sc
 %   - verbose       - set to true to display a progress bar
 % -------------------------------------------------------------------------
 % This function is a part of multi-scale analysis toolkit available from:
-% https://github.com/pkorus/multiscale-prnu-localization-toolbox
+% https://github.com/pkorus/multiscale-prnu
 % The code is provided without any warranty or support for educational and 
 % research purposes only. See readme.md for more details.
 % -------------------------------------------------------------------------

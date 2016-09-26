@@ -30,7 +30,7 @@ function [RP, LP, uImages] = estimateSPN(Images, spn_type, denoiser, sigma, sepC
 %     Information Forensics and Security, doi: 10.1109/TIFS.2011.2168214
 % -------------------------------------------------------------------------
 % This function is a part of multi-scale analysis toolkit available from:
-% https://github.com/pkorus/multiscale-prnu-localization-toolbox
+% https://github.com/pkorus/multiscale-prnu
 % The code is provided without any warranty or support for educational and 
 % research purposes only. See readme.md for more details.
 % -------------------------------------------------------------------------
