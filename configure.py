@@ -20,13 +20,13 @@ post = {
 sizes = {'UGM_2011.zip' : 477992, 'CameraFingerprint_1.0.zip' : 2113683, 'maxflow-v3.01.zip': 15006}
 
 def match_command(input):
-  patterns = ['clean', 'dependencies', 'data:maps', 'data:pixmaps']
+  patterns = ['clean', 'dependencies', 'data:maps', 'data:images']
   matching = [p for p in patterns if p.startswith(input)]
   if len(matching) == 1: return matching[0]
   return ''
 
 def print_usage():
-  print('usage: ./configure.py (clean|dependencies|data:maps|data:pixmaps)\n')
+  print('usage: ./configure.py (clean|dependencies|data:maps|data:images)\n')
   print('  clean        - cleans up 3-rd party dependencies')
   print('  dependencies - download and install 3rd-party dependencies')
   print('  data:maps    - downloads tampering localization maps (140 MB)')

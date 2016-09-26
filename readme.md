@@ -41,7 +41,7 @@ If you use this code or the datasets in your research, please cite the following
 }
 ```
 
-This code is intended for research and educational purposes. No warranty or support of any kind are provided whatsoever. Before publication, the code went through quite a lot of refactoring to make it understandable and reasonably commented. If you find any bugs or some new ways to improve the techniques, let me know.
+This code is intended only for research and educational purposes. No warranty or support of any kind are provided whatsoever. Before publication, the code went through quite a lot of refactoring to make it understandable and reasonably commented. If you find any bugs or some new ways to improve the techniques, let me know.
 
 ## Getting Started
 
@@ -115,7 +115,7 @@ The code comes with two datasets that you may wish to use in your experiments:
 To simplify the process, you can download them as follows:
 ```
 # ./configure.py data:maps
-# ./configure.py data:pixmaps
+# ./configure.py data:images
 ```
 
 Alternatively, to download the datasets manually, visit http://kt.agh.edu.pl/~korus.
