@@ -97,12 +97,13 @@ Function | Description
 ---------|------------
 `fuseAdaptWnd` | Chooses the smallest reliable analysis window for every location in the image; analogous to `detectForgeryPRNUAdaptiveWnd`
 `fuseCRF` | Fuses all candidate maps based on a conditional random field with adaptive neighborhood interactions
+`fuseCRFIsing` | Fuses all candidate maps based on a conditional random field with adaptive neighborhood interactions (alternative version with standard Ising potentials)
 
 For more information about these algorithms, please refer to the papers referenced above.
 
 The `fuseCRF` function can also be used for:
 - final decision in a standard single-scale scenario; adoption of neighborhood interactions and exploitation of image content can furher improve localization performance.
-- tampering map fusion in a multi-modal analysis scenario; in such scenario, remember to set threshold drift strength to zero.
+- tampering map fusion in a multi-modal analysis scenario; in this case, the threshold drift should be set to zero.
 
 ## Where do I go from here? Supplementary datasets.
 

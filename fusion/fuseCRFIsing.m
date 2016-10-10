@@ -1,4 +1,4 @@
-function [MAP] = fuseCRF(response_map, image, thresh, w, o)
+function [MAP] = fuseCRFIsing(response_map, image, thresh, w, o)
 % [MAP] = fuseCRF(response_map, image, thresh, w, o)
 %
 % Fusion of candidate response maps based on conditional random fields 
@@ -9,9 +9,10 @@ function [MAP] = fuseCRF(response_map, image, thresh, w, o)
 % can replace standard post-processing heuristics (e.g., thresholding
 % and morphological opening). See [1,2] for more details.
 %
-% This version uses a penalty for tampered regions to bias the decision
-% towards either of the labels. For an alternative version with standard
-% Ising potentials (prior probabilities) see function fuseCRFIsing.
+% This version uses a standard Ising model where decision bias is specified
+% in terms of prior probabilities (i.e., by default alpha is expected to be
+% 0.5). For an alternative version which penalizes tampered regions, see
+% function fuseCRF.
 %
 % Input parameters:
 % 
@@ -28,7 +29,7 @@ function [MAP] = fuseCRF(response_map, image, thresh, w, o)
 %
 %   - w                - parameters of the conditional random field (see
 %                        [1,2] for more details). 5-D vector:
-%                          w(1) - alpha (decision bias), default 0
+%                          w(1) - alpha (prior probability), default 0.5
 %                          w(2) - base interaction strength
 %                          w(3) - content-dependent interaction strength
 %                          w(4) - pixel similarity attenuation
@@ -110,7 +111,7 @@ function [MAP] = fuseCRF(response_map, image, thresh, w, o)
     [nRows, nCols] = size(response_map{1}.candidate);
 
     if ~exist('w', 'var') || isempty(w)
-        w = 0;
+        w = [0.5];
     end    
     
     % Pad with zeros, if unspecified
@@ -227,8 +228,9 @@ function [MAP] = fuseCRF(response_map, image, thresh, w, o)
     % Normalize by the number of candidate maps
     nodePot = nodePot .^ (1/numel(response_map));
     
-    % Penalty for tampered regions
-    nodePot(:,2) = nodePot(:,2) * exp(-w(1));
+    % Standard Ising model
+    nodePot(:,1) = nodePot(:,1) * exp(+log(w(1)/(1-w(1))));
+    nodePot(:,2) = nodePot(:,2) * exp(-log(w(1)/(1-w(1))));
     
     % Setup pairwise potentials
     if ~isempty(image) && (w(3) > 0 || nargout > 1)
