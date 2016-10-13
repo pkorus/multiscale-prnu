@@ -11,7 +11,8 @@ function guided_response = detectForgeryPRNUFilter(image, camera_model, bs, adva
 %  - bs              - block size, e.g., 128 (only some values are allowed)
 %  - advanced        - advanced parameters:
 %     mode                 - filtering mode: 'central', 'boxcar' or 'guided'
-%     stride               - stride, e.g., 8
+%     stride               - stride for probability computation, e.g., 8
+%     predictor_stride     - stride for correlation estimation, e.g., 8
 %     cfar_std_mul         - tampering acceptance threshold (number of standard deviations), default 2
 %     cfar_fp_rate         - false alarm rate for CFAR map, default 0.01
 %     verbose              - boolean
@@ -32,7 +33,7 @@ function guided_response = detectForgeryPRNUFilter(image, camera_model, bs, adva
 % -------------------------------------------------------------------------
 % Written by Paweł Korus, Shenzhen University and AGH University of Science 
 %   and Technology
-% Version: September 2016
+% Version: October 2016
 % Contact: pkorus [at] agh [dot] edu [dot] pl
 % -------------------------------------------------------------------------
 
@@ -65,7 +66,13 @@ function guided_response = detectForgeryPRNUFilter(image, camera_model, bs, adva
     if isfield(advanced, 'stride')
         bsk = advanced.stride;
     else
-        bsk = 16;
+        bsk = 4;
+    end
+
+    if isfield(advanced, 'predictor_stride')
+        pbsk = advanced.predictor_stride;
+    else
+        pbsk = 8;
     end
 
     % Extract noise from the image
@@ -113,7 +120,7 @@ function guided_response = detectForgeryPRNUFilter(image, camera_model, bs, adva
     end
     
     % Estimate the correlation field and apply predictor
-    [decision_map, map_prp, est_field, map_cor] = applyPRNUCorrelationFieldCentral(image, camera_model, response, bs, [bsk 4], [cfar_std_mul cfar_fp_rate], verbose);
+    [decision_map, map_prp, est_field, map_cor] = applyPRNUCorrelationFieldCentral(image, camera_model, response, bs, [pbsk bsk], [cfar_std_mul cfar_fp_rate], verbose);
 
     % Populate output struct
     guided_response = struct();

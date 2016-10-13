@@ -43,7 +43,7 @@ function response_map = detectForgeryPRNUAdaptiveWnd(image, camera_model, advanc
 % -------------------------------------------------------------------------
 % Written by Paweł Korus, Shenzhen University and AGH University of Science 
 %   and Technology
-% Version: September 2016
+% Version: October 2016
 % Contact: pkorus [at] agh [dot] edu [dot] pl
 % -------------------------------------------------------------------------
 
@@ -169,8 +169,8 @@ function response_map = detectForgeryPRNUAdaptiveWnd(image, camera_model, advanc
     bx = bs2_min + 1;
     fi = 1;
     
-    maxbx = size(image,2) - bs2_min;
-    maxby = size(image,1) - bs2_min;
+    maxbx = size(image,2) - bs2_min + 1;
+    maxby = size(image,1) - bs2_min + 1;
             
     maxfx = ceil((size(image,2) - bs + 1)/bsk);
     maxfy = ceil((size(image,1) - bs + 1)/bsk);
@@ -290,18 +290,19 @@ function response_map = detectForgeryPRNUAdaptiveWnd(image, camera_model, advanc
       t_last = toc; fprintf(' done in %.2f min\n', t_last/60);
     end
     
-    % Compact missing pixels due to stride > 1
-    if bsk > 1
-        for map_name = map_list
-            response_map.(map_name{1}) = response_map.(map_name{1})(mod(bs2_min-1,bsk)+2:bsk:end, mod(bs2_min-1,bsk)+2:bsk:end);
-            response_map.(map_name{1}) = fillBorders(response_map.(map_name{1}));
-            if image_padding
-                margin = floor(129/2) / bsk;
-                map = response_map.(map_name{1});
-                map = map(margin:end-margin, margin:end-margin);                
-                response_map.(map_name{1}) = map;
-            end            
-        end
+    % Sub-sample valid pixels, remove NaNs and invert image padding
+    for map_name = map_list
+        if bsk > 1 || image_padding
+	    response_map.(map_name{1}) = response_map.(map_name{1})(mod(bs2_min-1,bsk)+2:bsk:end, mod(bs2_min-1,bsk)+2:bsk:end);
+	end
+	response_map.(map_name{1}) = fillBorders(response_map.(map_name{1}));
+	response_map.(map_name{1}) = single(response_map.(map_name{1}));
+	if image_padding
+	    margin = floor(129/2) / bsk;
+	    map = response_map.(map_name{1});
+	    map = map(margin:end-margin, margin:end-margin);                
+	    response_map.(map_name{1}) = map;
+	end            
     end
     
 end

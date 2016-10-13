@@ -38,7 +38,7 @@ function [map_cfar, map_prp, est_cor, map_cor] = applyPRNUCorrelationFieldCentra
 % -------------------------------------------------------------------------
 % Written by Paweł Korus, Shenzhen University and AGH University of Science 
 %   and Technology
-% Version: September 2016
+% Version: October 2016
 % Contact: pkorus [at] agh [dot] edu [dot] pl
 % -------------------------------------------------------------------------
     
@@ -111,8 +111,8 @@ function [map_cfar, map_prp, est_cor, map_cor] = applyPRNUCorrelationFieldCentra
     bsk = bsks(1);
 
     bs2 = floor(bs/2);
-    maxbx = size(image,2) - bs;
-    maxby = size(image,1) - bs;
+    maxbx = size(image,2) - bs + 1;
+    maxby = size(image,1) - bs + 1;
             
     maxfx = ceil((size(image,2) - bs + 1)/bsk);
     maxfy = ceil((size(image,1) - bs + 1)/bsk);
@@ -265,8 +265,8 @@ function [map_cfar, map_prp, est_cor, map_cor] = applyPRNUCorrelationFieldCentra
     bsk = bsks(2);
 
     bs2 = floor(bs/2);
-    maxbx = size(image,2) - bs;
-    maxby = size(image,1) - bs;
+    maxbx = size(image,2) - bs + 1;
+    maxby = size(image,1) - bs + 1;
 
     maxfx = ceil((size(image,2) - bs + 1)/bsk);
     maxfy = ceil((size(image,1) - bs + 1)/bsk);
@@ -327,11 +327,11 @@ function [map_cfar, map_prp, est_cor, map_cor] = applyPRNUCorrelationFieldCentra
 
     % Compact results and fill missing
     if bsk > 1
-        map_cfar   = map_cfar(mod(bs2-1,bsk)+2:bsk:end, mod(bs2-1,bsk)+2:bsk:end);
-        map_prp    = map_prp(mod(bs2-1,bsk)+2:bsk:end, mod(bs2-1,bsk)+2:bsk:end);
+        map_cfar = map_cfar(mod(bs2-1,bsk)+2:bsk:end, mod(bs2-1,bsk)+2:bsk:end);
+        map_prp  = map_prp(mod(bs2-1,bsk)+2:bsk:end, mod(bs2-1,bsk)+2:bsk:end);
     end
     map_cfar = fillBorders(map_cfar);
-    map_prp = fillBorders(map_prp);    
+    map_prp  = fillBorders(map_prp);    
 
     % Return compensated correlation field
     map_cor = corr_field ./ div_factor;
@@ -344,6 +344,6 @@ function [map_cfar, map_prp, est_cor, map_cor] = applyPRNUCorrelationFieldCentra
     map_cfar = im2bw(map_cfar);
 
     % Compact maps for smaller storage requirements
-    est_cor = single(est_cor(mod(bs2-1,bsk)+2:bsk:end, mod(bs2-1,bsk)+2:bsk:end));
+    est_cor = single(imresize(est_cor, size(map_prp)));
     map_prp = single(map_prp);
 end

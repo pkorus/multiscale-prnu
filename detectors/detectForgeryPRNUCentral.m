@@ -16,8 +16,8 @@ function response_map = detectForgeryPRNUCentral(image, camera_model, bs, advanc
 %                               standard deviations), default 2
 %     cfar_fp_rate            - false alarm rate for CFAR map, default 0.01
 %     verbose                 - boolean
-%     calc_pce                - include also PCE and p-value maps
-%     calc_cfar               - include also a CFAR map (3-label, see below)
+%     calc_pce                - include PCE and p-value maps
+%     calc_cfar               - include CFAR map (3-label, see below)
 %     segmentwise_correlation - corr only over similar pixels
 %     similarity_threshold    - threshold for pixel similarity
 %     minimum_window_size     - minimum segment size (in pixels)
@@ -27,16 +27,18 @@ function response_map = detectForgeryPRNUCentral(image, camera_model, bs, advanc
 %  - map_cor         - correlation field
 %  - est_cor         - predicted correlation field
 %  - map_prp         - tampering probability with real-valued scores [0,1]
-%  - map_cfar        - binary decision map according to the two-threshold CFAR method
-% and optionally:
+%  - map_cfar        - binary decision map according to the two-threshold 
+%                      CFAR method and optionally:
 %  - map_pva         - p-value based response map
 %  - map_pce         - PCE response map
 %
 % Notes:
 %
-% The optional CFAR map is generated with 3 labels: 0 - authentic pixels; 1 - potentially
-% tampered pixels that do not meet the constraint on the desired false positive rate;
-% 2 - potentially tampered pixels that satisfy the FAR constraint.
+% The optional CFAR map is generated with 3 labels: 
+%  0 - authentic pixels; 
+%  1 - potentially tampered pixels that do not meet the constraint on the 
+%      desired false positive rate;
+%  2 - potentially tampered pixels that satisfy the FAR constraint.
 %
 % References:
 %
@@ -51,7 +53,7 @@ function response_map = detectForgeryPRNUCentral(image, camera_model, bs, advanc
 % -------------------------------------------------------------------------
 % Written by Paweł Korus, Shenzhen University and AGH University of Science 
 %   and Technology
-% Version: September 2016
+% Version: October 2016
 % Contact: pkorus [at] agh [dot] edu [dot] pl
 % -------------------------------------------------------------------------
 
@@ -182,8 +184,8 @@ function response_map = detectForgeryPRNUCentral(image, camera_model, bs, advanc
     sum2 = @(x) sum(x(:));
             
     bs2 = floor(bs/2);
-    maxbx = size(image,2) - bs;
-    maxby = size(image,1) - bs;
+    maxbx = size(image,2) - bs + 1;
+    maxby = size(image,1) - bs + 1;
             
     maxfx = ceil((size(image,2) - bs + 1)/bsk);
     maxfy = ceil((size(image,1) - bs + 1)/bsk);    
@@ -374,12 +376,12 @@ function response_map = detectForgeryPRNUCentral(image, camera_model, bs, advanc
             % the first threshold (here, fixed at 2 * standard deviation - approx 1% of false miss rate
             % the second threshold is dynamic - guarantees certain fale acceptance rate limit
             if calc_cfar
-                threshold = rates(1) * absence_model.normfit(2);
+                threshold = cfar_std_mul * absence_model.normfit(2);
                 label = 0;
                 if ncorr < threshold
                     % Check the H1 distribution to see if fp limit is not
                     % exceeded
-                    if normcdf(ncorr, pred_cor, predictor.normfit(2)) < rates(2)
+                    if normcdf(ncorr, pred_cor, predictor.normfit(2)) < cfar_fp_rate
                         label = 2;
                     else
                         label = 1;
@@ -414,18 +416,18 @@ function response_map = detectForgeryPRNUCentral(image, camera_model, bs, advanc
       t_last = toc; fprintf(' done in %.2f min\n', t_last/60);
     end
     
-    % Compact missing pixels due to stride > 1
-    if bsk > 1
-        for map_name = map_list
+    % Sub-sample valid pixels, remove NaNs and invert image padding
+    for map_name = map_list
+        if bsk > 1 || image_padding
             response_map.(map_name{1}) = response_map.(map_name{1})(mod(bs2-1,bsk)+2:bsk:end, mod(bs2-1,bsk)+2:bsk:end);
-            response_map.(map_name{1}) = fillBorders(response_map.(map_name{1}));
-            response_map.(map_name{1}) = single(response_map.(map_name{1}));
-            if image_padding
-                margin = floor(bs/2) / bsk;
-                map = response_map.(map_name{1});
-                map = map(margin:end-margin, margin:end-margin);                
-                response_map.(map_name{1}) = map;
-            end
+        end
+        response_map.(map_name{1}) = fillBorders(response_map.(map_name{1}));
+        response_map.(map_name{1}) = single(response_map.(map_name{1}));
+        if image_padding
+            margin = floor(bs/2) / bsk;
+            map = response_map.(map_name{1});
+            map = map(margin:end-margin, margin:end-margin);                
+            response_map.(map_name{1}) = map;
         end
     end
 
