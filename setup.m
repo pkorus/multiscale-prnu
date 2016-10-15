@@ -12,7 +12,7 @@ paths = {
 paths = [paths ; extra_paths';];
 
 for i=1:length(paths)
-    if numel(paths{i}) > 0 && exist(paths{i}, 'file') == 7
+    if numel(paths{i}) > 0 && exist(paths{i}, 'dir')
         % Skip directories without useful files
         if numel(dir([paths{i} '/*.m'])) + numel(dir([paths{i} '/*.' mexext()])) > 0
             if verbose; fprintf('Adding to path: %s\n', paths{i}); end;
