@@ -273,7 +273,7 @@ function response_map = detectForgeryPRNU(image, camera_model, bs, bsk, verbose,
     
     if bsk > 1 && any(any(isnan(response_map.map_cor)))
         for vali = 1:numel(field_mapping)
-            response_map.(field_mapping{vali}) = fillMissing(response_map.(field_mapping{vali}));
+            response_map.(field_mapping{vali}) = fillBorders(response_map.(field_mapping{vali}));
         end
     end    
 
