@@ -11,8 +11,8 @@ threshold = 0.4;
 
 %% Load cached data
 
-if exist('data-tifs-2016-maps', 'dir')
-    data_path = 'data-tifs-2016-maps';
+if exist('data/tifs-2016-maps', 'dir')
+    data_path = 'data/tifs-2016-maps';
 else
     data_path = 'data/sample_maps';
 end
@@ -23,7 +23,7 @@ ground_truth = imread(sprintf('%s/%s/%s_mask.PNG', data_path, camera_name, image
 ground_truth = imresize(ground_truth, [135 240]);
 
 % Load multi-scale response maps
-response_maps = loadMaps(camera_name, image_name, 'central');
+response_maps = loadMaps(camera_name, image_name, 'central', data_path);
 response_maps = postprocessMaps(response_maps, @(x) imresize(x, 0.5, 'bilinear'));
 
 % Multi-scale CRF-based fusion

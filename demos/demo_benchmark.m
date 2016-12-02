@@ -11,7 +11,7 @@
 
 %% Setup and list test images
 
-data_path = 'data-tifs-2016-maps';
+data_path = 'data/tifs-2016-maps';
 
 if ~exist(data_path, 'dir')    
     fprintf('Data-set not found (%s)! Use ./configure data:maps or see readme.md for more info.\n', data_path);
@@ -63,7 +63,7 @@ for file_id = 1:total
     ground_truth = imresize(ground_truth, [135 240]);
 
     % Load multi-scale response maps
-    response_maps = loadMaps(camera_name, image_name, 'central');
+    response_maps = loadMaps(camera_name, image_name, 'central', data_path);
     response_maps = postprocessMaps(response_maps, @(x) imresize(x, 0.5, 'bilinear'));
     
     for t_id = 1:numel(thresholds)

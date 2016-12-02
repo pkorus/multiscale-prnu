@@ -1,15 +1,17 @@
-function response = loadMaps(cam_name, file_name, detector_name, map_type)
+function response = loadMaps(cam_name, file_name, detector_name, scenario_path, map_type)
 % response = loadMaps(cam_name, file_name, detector_name, map_type)
 %
 % Reads cached response maps for a given test example.
 %
 % See readme.md for available detector names and map types.
 
-    if ~exist('map_type', 'var')        
+    if ~exist('map_type', 'var')
         map_type = 'tampering_probability';
     end
     
-    scenario_path = 'data-tifs-2016-maps';
+    if ~exist('scenario_path', 'var')
+        scenario_path = 'data/tifs-2016-maps';
+    end
         
     % Shape of the reliability curve
     w = [30, 2.5];
