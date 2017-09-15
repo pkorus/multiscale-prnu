@@ -1,4 +1,4 @@
-function [MAP] = fuseCRFIsing(response_map, image, thresh, w, o)
+function [MAP,MARGINAL] = fuseCRFIsing(response_map, image, thresh, w, o)
 % [MAP] = fuseCRF(response_map, image, thresh, w, o)
 %
 % Fusion of candidate response maps based on conditional random fields 
@@ -83,7 +83,7 @@ function [MAP] = fuseCRFIsing(response_map, image, thresh, w, o)
 % -------------------------------------------------------------------------
 % Written by Paweł Korus, Shenzhen University and AGH University of Science 
 %   and Technology
-% Version: September 2016
+% Version: September 2017
 % Contact: pkorus [at] agh [dot] edu [dot] pl
 % -------------------------------------------------------------------------
 
@@ -156,11 +156,22 @@ function [MAP] = fuseCRFIsing(response_map, image, thresh, w, o)
             % Remove maps based on similarity to Gaussian noise
             [valid_indices, map_distances] = filterValidMaps(response_map, o.cand_map_filter_threshold);
         end               
-                        
-        % If there are no valid maps, use the best available one
+                    
+        if o.verbose
+            fprintf('Candidate map validity:');
+            fprintf(' %d', valid_indices);
+            fprintf('\n');
+        end
+        % If there are no valid maps, return an empty decision map
         if all(~valid_indices)
-            [~, best_map_ind] = max(map_distances);
-            valid_indices(best_map_ind) = true;
+            if o.verbose
+                warning('forensicsFramework:fusionInput', 'All candidate maps are invalid! Returning empty decision map.');
+            end
+            MAP = zeros(size(response_map{1}.candidate));
+            if nargout > 1
+                MARGINAL = zeros(size(response_map{1}.candidate));
+            end
+            return;
         end
         
         response_map = response_map(valid_indices);
@@ -205,13 +216,18 @@ function [MAP] = fuseCRFIsing(response_map, image, thresh, w, o)
                 new_thresholds = thresholds;
                 
                 % Small scale has not been detected
-                new_thresholds(~sel) = min(1 - o.threshold_saturation_gap, thresholds(~sel) + w(5));
+                new_thresholds(~sel) = min(1 - o.threshold_saturation_gap, max(o.threshold_saturation_gap, thresholds(~sel) + w(5)));
                 
                 % Small scale has been detected
-                new_thresholds(sel) = max(o.threshold_saturation_gap, thresholds(sel) - w(5));
+                new_thresholds(sel) = min(1 - o.threshold_saturation_gap, max(o.threshold_saturation_gap, thresholds(sel) - w(5)));
                 
                 % Apply the new thresholds only in reliable areas (soft)
-                thresholds = new_thresholds .* Y + thresholds .* (1 - Y);                
+                Y = response_map{i-1}.reliability(:);
+                thresholds = new_thresholds .* Y + thresholds .* (1 - Y);
+                
+                if any(thresholds > 1) || any(thresholds < 0)
+                    error('forensicsFramework:invalidData', 'Quasi-threshold out of range [0,1] - please check if reliability maps are in [0,1]!');
+                end
             end
 
             lastX = X;
@@ -262,6 +278,12 @@ function [MAP] = fuseCRFIsing(response_map, image, thresh, w, o)
     
     % Convert the solution to a tampering map
     MAP = im2bw(double(reshape(optimalDecoding,nRows,nCols))-1);    
+    
+    if nargout > 1
+        MARGINAL = UGM_Infer_LBP(nodePot,edgePot,edgeStruct);
+        MARGINAL = reshape(MARGINAL(:,2),nRows,nCols);
+    end
+    
 end
  
 function [valid_indices, distance] = filterEmptyMaps(cand_maps, th)
