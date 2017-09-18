@@ -7,4 +7,5 @@ function o = defaultFusionSettings()
     o.threshold_saturation_gap = 0.05;
     o.discard_unreliable_maps = 1;
     o.cand_map_filter_threshold = 0.1;
+    o.verbose = false;
 end
