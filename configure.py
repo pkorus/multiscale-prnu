@@ -7,19 +7,19 @@ import math
 
 deps = {
     'ugm': 'http://www.cs.ubc.ca/~schmidtm/Software/UGM_2011.zip',
-    'maxflow': 'http://vision.csd.uwo.ca/code/maxflow-v3.01.zip',
-    'dde-prnu': 'http://dde.binghamton.edu/download/camera_fingerprint/CameraFingerprint_1.0.zip'
+    'maxflow': 'http://mouse.cs.uwaterloo.ca/code/maxflow-v3.01.zip',
+    'dde-prnu': 'http://dde.binghamton.edu/download/camera_fingerprint/CameraFingerprint_1.1.zip'
 }
 
 post = {
     'ugm': 'mv 3rd-party/ugm/UGM/* 3rd-party/ugm && rm -r 3rd-party/ugm/UGM',
-    'maxflow': 'mv 3rd-party/maxflow 3rd-party/max-flow/maxflow-v3.0',
+    'maxflow': 'mv 3rd-party/maxflow 3rd-party/max-flow/maxflow-v3.01',
     'dde-prnu': 'mv 3rd-party/dde-prnu/CameraFingerprint/* 3rd-party/dde-prnu && rm -r 3rd-party/dde-prnu/CameraFingerprint',
     'tifs-2016-maps' : 'mv data/tifs-2016-maps/data-tifs-2016-maps/* data/tifs-2016-maps && rm -r data/tifs-2016-maps/data-tifs-2016-maps',
     'images' : 'mv data/images/data-images/* data/images && rm -r data/images/data-images && mv data/images/camera_models/* data/camera_models && rm -r data/images/camera_models'
 }
 
-sizes = {'UGM_2011.zip': 477992, 'CameraFingerprint_1.0.zip': 2113683, 'maxflow-v3.01.zip': 15006,
+sizes = {'UGM_2011.zip': 477992, 'CameraFingerprint_1.1.zip': 2113709, 'maxflow-v3.01.zip': 15006,
          'data-tifs-2016-maps.zip': 147930670, 'realistic-tampering-dataset.zip': 1697070982}
 
 
@@ -125,7 +125,7 @@ if match_command(sys.argv[-1]) == 'clean':
     print('Cleaning downloaded 3rd-party dependencies')
     sh('rm -r 3rd-party/ugm')
     sh('rm -r 3rd-party/maxflow')
-    sh('rm -r 3rd-party/max-flow/maxflow-v3.0')
+    sh('rm -r 3rd-party/max-flow/maxflow-v3.01')
     sh('rm -r 3rd-party/dde-prnu')
     sys.exit(0)
 
