@@ -6,7 +6,7 @@ import urllib2
 import math
 
 deps = {
-    'ugm': 'http://www.cs.ubc.ca/~schmidtm/Software/UGM_2011.zip',
+    'ugm': 'https://www.cs.ubc.ca/~schmidtm/Software/UGM_2011.zip',
     'maxflow': 'http://mouse.cs.uwaterloo.ca/code/maxflow-v3.01.zip',
     'dde-prnu': 'http://dde.binghamton.edu/download/camera_fingerprint/CameraFingerprint_1.1.zip'
 }
@@ -19,7 +19,7 @@ post = {
     'images' : 'mv data/images/data-images/* data/images && rm -r data/images/data-images && mv data/images/camera_models/* data/camera_models && rm -r data/images/camera_models'
 }
 
-sizes = {'UGM_2011.zip': 477992, 'CameraFingerprint_1.1.zip': 2113709, 'maxflow-v3.01.zip': 15006,
+sizes = {'UGM_2011.zip': 467330, 'CameraFingerprint_1.1.zip': 2113709, 'maxflow-v3.01.zip': 15006,
          'data-tifs-2016-maps.zip': 147930670, 'realistic-tampering-dataset.zip': 1697070982}
 
 
