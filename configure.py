@@ -19,7 +19,7 @@ post = {
     'images' : 'mv data/images/data-images/* data/images && rm -r data/images/data-images && mv data/images/camera_models/* data/camera_models && rm -r data/images/camera_models'
 }
 
-sizes = {'UGM_2011.zip': 467330, 'CameraFingerprint_1.1.zip': 2113709, 'maxflow-v3.01.zip': 15006,
+sizes = {'UGM_2011.zip': 476869, 'CameraFingerprint_1.1.zip': 2113709, 'maxflow-v3.01.zip': 15006,
          'data-tifs-2016-maps.zip': 147930670, 'realistic-tampering-dataset.zip': 1697070982}
 
 
@@ -82,7 +82,7 @@ def isfileok(filename, dirname):
 
     file_size = os.path.getsize('%s/%s' % (dirname,filename))
     if file_size != sizes[filename]:
-        print('Cached copy of %s is invalid, cleaning up...' % filename)
+        print('Cached copy of %s is invalid: expected %d bytes but got %d bytes - cleaning up...' % (filename, sizes[filename], file_size))
         os.remove('%s/%s' % (dirname,filename))
         return False
 
@@ -97,10 +97,16 @@ def fetch_dependency(dep, url, cache_dir):
         print('Directory already exists (%s)' % dir_name)
     else:
         print('Downloading (%s)' % filename)
+        counter = 3
 
         while not isfileok(filename, cache_dir):
-            print('Fetching file %s' % filename)
-            download(url, filename, cache_dir)
+            if counter > 0:
+                print('Fetching file %s' % filename)
+                download(url, filename, cache_dir)
+                counter -= 1
+            else:
+                print('Error downloading %s - stopping after 3 attempts!' % filename)
+                sys.exit(1)
 
         print('Unpacking file %s' % filename)
         stat = unzip('%s/%s' % (cache_dir, filename), dir_name)
